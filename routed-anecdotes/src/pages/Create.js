@@ -8,8 +8,13 @@ const Create = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const onAddNew = (payload) => {
-    dispatch(addAnecdote(payload));
+  const onAddNew = async (anecdote) => {
+    const { payload, error } = await dispatch(addAnecdote(anecdote));
+
+    if (error) {
+      return dispatch(setNotification({ text: error.message }));
+    }
+
     dispatch(setNotification({ text: `Created Anecdote: ${payload.content}` }));
     navigate('/');
   };

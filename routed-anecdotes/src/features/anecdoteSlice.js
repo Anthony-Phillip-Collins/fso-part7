@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 
 const initialState = [
   {
@@ -17,20 +17,38 @@ const initialState = [
   },
 ];
 
+const id = () => Math.round(Math.random() * 10000);
+
+export const addAnecdote = createAsyncThunk(
+  'anecdote/addAnecdote',
+  async ({ content, author, info }) => {
+    return await new Promise((resolve, reject) => {
+      if (content && author && info) {
+        return resolve({ content, author, info, id: id(), votes: 0 });
+      }
+      reject(
+        new Error('There has been an error! Make sure all fields are filled.')
+      );
+    });
+  }
+);
+
 export const anecdoteSlice = createSlice({
   name: 'anecdote',
   initialState,
-  reducers: {
-    addAnecdote: (state, action) => {
-      const { content, author, info } = action.payload;
-      if (content && author && info) {
-        const id = Math.round(Math.random() * 10000);
-        state.push({ content, author, info, id, votes: 0 });
-      }
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(addAnecdote.pending, (state, action) => {
+        console.log('addAnecdote.pending');
+      })
+      .addCase(addAnecdote.fulfilled, (state, action) => {
+        state.push(action.payload);
+      })
+      .addCase(addAnecdote.rejected, (state, action) => {
+        console.log('addAnecdote.rejected');
+      });
   },
 });
-
-export const { addAnecdote } = anecdoteSlice.actions;
 
 export default anecdoteSlice.reducer;
