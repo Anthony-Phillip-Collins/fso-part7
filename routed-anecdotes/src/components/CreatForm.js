@@ -1,9 +1,9 @@
 import { useField } from '../hooks';
 
 const CreateForm = (props) => {
-  const { reset: resetContent, ...content } = useField('content');
-  const { reset: resetAuthor, ...author } = useField('author');
-  const { reset: resetInfo, ...info } = useField('info');
+  const { reset: resetContent, ...content } = useField('text');
+  const { reset: resetAuthor, ...author } = useField('text');
+  const { reset: resetInfo, ...info } = useField('text');
 
   const handleSubmit = (e) => {
     e.preventDefault();
