@@ -18,7 +18,9 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   const data = { ...request.body, likes: likes || 0 };
 
   if (!(title && url)) {
-    return response.status(400).json({ error: { message: 'malformed request' } });
+    return response
+      .status(400)
+      .json({ error: { message: 'malformed request' } });
   }
 
   const { user } = request;
@@ -54,9 +56,7 @@ blogsRouter.delete('/:id', userExtractor, async (request, response, next) => {
 });
 
 blogsRouter.put('/:id', userExtractor, async (request, response, next) => {
-  const {
-    author, title, url, likes,
-  } = request.body;
+  const { author, title, url, likes } = request.body;
 
   const { user } = request;
   const blog = await Blog.findById(request.params.id);
@@ -76,7 +76,10 @@ blogsRouter.put('/:id', userExtractor, async (request, response, next) => {
 
   if (ownedByUser) {
     return update({
-      author, title, url, likes,
+      author,
+      title,
+      url,
+      likes,
     });
   }
 

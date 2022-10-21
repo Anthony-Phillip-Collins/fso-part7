@@ -19,22 +19,34 @@ const unknownEndpoint = (request, response) => {
 const errorHandler = (error, request, response, next) => {
   switch (error.name) {
     case ErrorName.NotFound:
-      response.status(404).json({ error: { message: 'The requested resource doesn’t exists!' } });
+      response
+        .status(404)
+        .json({ error: { message: 'The requested resource doesn’t exists!' } });
       break;
     case ErrorName.CastError:
       response.status(400).json({ error: { message: 'Malformatted id!' } });
       break;
     case ErrorName.ValidationError:
-      response.status(400).json({ error: error.errors[Object.keys(error.errors).pop()] });
+      response
+        .status(400)
+        .json({ error: error.errors[Object.keys(error.errors).pop()] });
       break;
     case ErrorName.JsonWebTokenError:
-      response.status(401).json({ error: { message: 'token missing or invalid' } });
+      response
+        .status(401)
+        .json({ error: { message: 'token missing or invalid' } });
       break;
     case ErrorName.Unauthorized:
-      response.status(401).json({ error: { message: 'User doesn’t have permissions to perform this action.' } });
+      response.status(401).json({
+        error: {
+          message: 'User doesn’t have permissions to perform this action.',
+        },
+      });
       break;
     case ErrorName.NotInTestMode:
-      response.status(401).json({ error: { message: 'Access denied! App is not running in test-mode!' } });
+      response.status(401).json({
+        error: { message: 'Access denied! App is not running in test-mode!' },
+      });
       break;
     default:
       response.status(500).send(error.message || 'Something broke!');
@@ -44,7 +56,10 @@ const errorHandler = (error, request, response, next) => {
 const tokenExtractor = (request, response, next) => {
   const authorization = request.get('authorization');
   const authenticationScheme = 'bearer ';
-  if (authorization && authorization.toLowerCase().startsWith(authenticationScheme)) {
+  if (
+    authorization &&
+    authorization.toLowerCase().startsWith(authenticationScheme)
+  ) {
     request.token = authorization.substring(authenticationScheme.length);
   }
   next();

@@ -10,7 +10,10 @@ const connectToDb = require('./utils/connectToDb');
 const testingRouter = require('./controllers/testing');
 
 const {
-  errorHandler, unknownEndpoint, requestLogger, tokenExtractor,
+  errorHandler,
+  unknownEndpoint,
+  requestLogger,
+  tokenExtractor,
 } = require('./utils/middleware');
 
 const init = async () => {

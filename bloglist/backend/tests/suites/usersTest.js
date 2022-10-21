@@ -28,10 +28,7 @@ const usersTests = () => {
 
   describe('reading users', () => {
     test('amount of initial remote users equals amount of local dummy users', async () => {
-      await api
-        .get('/api/users')
-        .expect('Content-Type', /json/)
-        .expect(200);
+      await api.get('/api/users').expect('Content-Type', /json/).expect(200);
 
       const users = await testHelper.usersInDb();
 
@@ -39,10 +36,7 @@ const usersTests = () => {
     });
 
     test('populate', async () => {
-      await api
-        .get('/api/users')
-        .expect('Content-Type', /json/)
-        .expect(200);
+      await api.get('/api/users').expect('Content-Type', /json/).expect(200);
 
       const users = await User.find({}).populate('blogs', { author: 1 });
       expect(users.length).toStrictEqual(usersDummy.length);
@@ -88,7 +82,9 @@ const usersTests = () => {
         })
         .expect(400);
 
-      expect(req.body.error.message).toEqual('The username has to be at least 3 characters long!');
+      expect(req.body.error.message).toEqual(
+        'The username has to be at least 3 characters long!'
+      );
 
       req = await api
         .post('/api/users')
@@ -98,7 +94,9 @@ const usersTests = () => {
         })
         .expect(400);
 
-      expect(req.body.error.message).toEqual('The username has to be at least 3 characters long!');
+      expect(req.body.error.message).toEqual(
+        'The username has to be at least 3 characters long!'
+      );
     });
 
     test('fails with status 400 if username is not unique', async () => {
@@ -112,7 +110,9 @@ const usersTests = () => {
         })
         .expect(400);
 
-      expect(res.body.error.message).toStrictEqual(`${username} already exists. The username has to be unique.`);
+      expect(res.body.error.message).toStrictEqual(
+        `${username} already exists. The username has to be unique.`
+      );
     });
   });
 

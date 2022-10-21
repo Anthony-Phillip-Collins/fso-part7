@@ -8,32 +8,36 @@ const connectToDb = require('../../utils/connectToDb');
 
 const api = supertest(app);
 
-const user1Credentials = { username: 'User1', password: process.env.USER1_PASSWORD };
-const user2Credentials = { username: 'User2', password: process.env.USER2_PASSWORD };
+const user1Credentials = {
+  username: 'User1',
+  password: process.env.USER1_PASSWORD,
+};
+const user2Credentials = {
+  username: 'User2',
+  password: process.env.USER2_PASSWORD,
+};
 const user1Blogs = blogsDummy.slice(0, Math.floor(blogsDummy.length / 2));
 const user2Blogs = blogsDummy.slice(user1Blogs.length, blogsDummy.length);
 
 let token;
 
-const login = async (credentials = user1Credentials) => api
-  .post('/api/login')
-  .send(credentials)
-  .then((response) => {
-    token = response.body.token;
-    return response;
-  });
+const login = async (credentials = user1Credentials) =>
+  api
+    .post('/api/login')
+    .send(credentials)
+    .then((response) => {
+      token = response.body.token;
+      return response;
+    });
 
-const authPost = () => api
-  .post('/api/blogs')
-  .set('Authorization', `Bearer ${token}`);
+const authPost = () =>
+  api.post('/api/blogs').set('Authorization', `Bearer ${token}`);
 
-const authDelete = (id) => api
-  .delete(`/api/blogs/${id}`)
-  .set('Authorization', `Bearer ${token}`);
+const authDelete = (id) =>
+  api.delete(`/api/blogs/${id}`).set('Authorization', `Bearer ${token}`);
 
-const authPut = (id) => api
-  .put(`/api/blogs/${id}`)
-  .set('Authorization', `Bearer ${token}`);
+const authPut = (id) =>
+  api.put(`/api/blogs/${id}`).set('Authorization', `Bearer ${token}`);
 
 const blogsTests = () => {
   beforeEach(async () => {
@@ -77,17 +81,27 @@ const blogsTests = () => {
 
     test('favourite blog', () => {
       const { title, author, likes } = testHelper.favoriteBlog(blogsDummy);
-      expect({ title, author, likes }).toStrictEqual({ title: 'Canonical string reduction', author: 'Edsger W. Dijkstra', likes: 12 });
+      expect({ title, author, likes }).toStrictEqual({
+        title: 'Canonical string reduction',
+        author: 'Edsger W. Dijkstra',
+        likes: 12,
+      });
     });
 
     test('most blogs', () => {
       const { author, blogs } = testHelper.mostBlogs(blogsDummy);
-      expect({ author, blogs }).toStrictEqual({ author: 'Robert C. Martin', blogs: 3 });
+      expect({ author, blogs }).toStrictEqual({
+        author: 'Robert C. Martin',
+        blogs: 3,
+      });
     });
 
     test('most likes', () => {
       const { author, likes } = testHelper.mostLikes(blogsDummy);
-      expect({ author, likes }).toStrictEqual({ author: 'Edsger W. Dijkstra', likes: 17 });
+      expect({ author, likes }).toStrictEqual({
+        author: 'Edsger W. Dijkstra',
+        likes: 17,
+      });
     });
   });
 
@@ -120,9 +134,7 @@ const blogsTests = () => {
     test('fails with statuscode 400 if id is invalid', async () => {
       const invalidId = '5a3d5da59070081a82a3445';
 
-      await api
-        .get(`/api/blogs/${invalidId}`)
-        .expect(400);
+      await api.get(`/api/blogs/${invalidId}`).expect(400);
     });
   });
 
@@ -133,7 +145,10 @@ const blogsTests = () => {
     });
 
     test('logging in as User1 fails with status 401 if credentials are invalid', async () => {
-      const response = await login({ ...user1Credentials, password: 'wrongpassword' });
+      const response = await login({
+        ...user1Credentials,
+        password: 'wrongpassword',
+      });
       expect(response.status).toStrictEqual(401);
     });
   });
@@ -158,14 +173,15 @@ const blogsTests = () => {
 
       const updatedBlogPosts = await testHelper.blogsInDb();
       const latestBlogPost = await Blog.findById(response.body.id);
-      const {
-        title, author, url, likes,
-      } = latestBlogPost;
+      const { title, author, url, likes } = latestBlogPost;
 
       expect(updatedBlogPosts.length).toEqual(currentBlogPosts.length + 1);
 
       expect({
-        title, author, url, likes,
+        title,
+        author,
+        url,
+        likes,
       }).toStrictEqual({
         title: newBlogPost.title,
         author: newBlogPost.author,
@@ -212,13 +228,9 @@ const blogsTests = () => {
 
       await login();
 
-      await authPost()
-        .send(noTitle)
-        .expect(400);
+      await authPost().send(noTitle).expect(400);
 
-      await authPost()
-        .send(noUrl)
-        .expect(400);
+      await authPost().send(noUrl).expect(400);
     });
 
     test('fails with status code 401 if token is not provided', async () => {
@@ -233,9 +245,7 @@ const blogsTests = () => {
 
       token = null;
 
-      await authPost()
-        .send(newBlogPost)
-        .expect(401);
+      await authPost().send(newBlogPost).expect(401);
     });
   });
 
@@ -245,8 +255,7 @@ const blogsTests = () => {
 
       await login();
 
-      await authDelete(id)
-        .expect(204);
+      await authDelete(id).expect(204);
     });
 
     test('returns status code 404 if id no longer exists', async () => {
@@ -254,11 +263,9 @@ const blogsTests = () => {
 
       await login();
 
-      await authDelete(id)
-        .expect(204);
+      await authDelete(id).expect(204);
 
-      await authDelete(id)
-        .expect(404);
+      await authDelete(id).expect(404);
     });
   });
 
@@ -266,21 +273,23 @@ const blogsTests = () => {
     test('succeeds with status code 201 if id is valid', async () => {
       const { id } = await Blog.findOne();
       const update = {
-        title: 'Springfield News', author: 'Homer Simpson', url: 'https://en.wikipedia.org/wiki/The_Simpsons', likes: 99,
+        title: 'Springfield News',
+        author: 'Homer Simpson',
+        url: 'https://en.wikipedia.org/wiki/The_Simpsons',
+        likes: 99,
       };
 
       await login();
 
-      await authPut(id)
-        .send(update)
-        .expect(201);
+      await authPut(id).send(update).expect(201);
 
-      const {
-        title, author, url, likes,
-      } = await Blog.findById(id);
+      const { title, author, url, likes } = await Blog.findById(id);
 
       expect({
-        title, author, url, likes,
+        title,
+        author,
+        url,
+        likes,
       }).toStrictEqual(update);
     });
   });

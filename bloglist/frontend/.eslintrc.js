@@ -2,10 +2,10 @@ module.exports = {
   extends: ['airbnb', 'prettier', 'plugin:cypress/recommended'],
   plugins: ['react', 'jest', 'prettier', 'cypress'],
   rules: {
+    'prettier/prettier': ['error'],
     'no-console': 0,
     'arrow-spacing': ['error', { before: true, after: true }],
     'no-trailing-spaces': 'error',
-    'prettier/prettier': ['error'],
 
     'react/react-in-jsx-scope': 'off',
     'react/jsx-filename-extension': [1, { extensions: ['.js', '.jsx'] }],
