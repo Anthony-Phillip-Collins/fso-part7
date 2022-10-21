@@ -1,22 +1,22 @@
 import { useState, useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { setNotification } from './app/reducers/notificationSlice';
 import Blog from './components/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
-import Notification from './components/Notification';
+import NotificationContainer from './components/Notification/NotificationContainer';
 import Toggleable from './components/Toggleable';
 import blogService from './services/blogs';
 import loginService from './services/login';
 
 function App() {
+  const dispatch = useDispatch();
   const [blogs, setBlogs] = useState([]);
   const [user, setUser] = useState();
-  const [notification, setNotification] = useState({
-    message: '',
-    error: null,
-    isError: false,
-  });
   const toggleRef = useRef();
   const blogFormRef = useRef();
+
+  const notify = (args) => dispatch(setNotification(args));
 
   const onLogin = async ({ username, password }) => {
     try {
@@ -24,7 +24,7 @@ function App() {
       loginService.setUser(data);
       setUser(loginService.getUser());
     } catch (error) {
-      setNotification({ error });
+      notify({ error });
     }
   };
 
@@ -38,8 +38,8 @@ function App() {
     const blog = { title, author, url };
     try {
       const data = await blogService.create(blog);
-      setNotification({
-        message: `The blog named '${data.title}' has been added.`,
+      notify({
+        text: `The blog named '${data.title}' has been added.`,
       });
 
       setBlogs(blogs.concat(data));
@@ -47,7 +47,7 @@ function App() {
       blogFormRef.current.clearFields();
       toggleRef.current.toggle();
     } catch (error) {
-      setNotification({ error });
+      // setNotification({ error });
     }
   };
 
@@ -61,8 +61,8 @@ function App() {
         id,
       });
 
-      setNotification({
-        message: `The blog named '${update.title}' has been updated.`,
+      notify({
+        text: `The blog named '${update.title}' has been updated.`,
       });
 
       const updatedBlogs = blogs.map((old) =>
@@ -71,7 +71,7 @@ function App() {
 
       setBlogs(updatedBlogs);
     } catch (error) {
-      setNotification({ error });
+      notify({ error });
     }
   };
 
@@ -80,14 +80,14 @@ function App() {
       await blogService.remove({ id });
       const deleted = blogs.find((blog) => blog.id === id);
 
-      setNotification({
-        message: `Blog "${deleted.title}" successfully deleted.`,
+      notify({
+        text: `Blog "${deleted.title}" successfully deleted.`,
       });
 
       const updatedBlogs = blogs.filter((blog) => blog.id !== id);
       setBlogs(updatedBlogs);
     } catch (error) {
-      setNotification({ error });
+      notify({ error });
     }
   };
 
@@ -112,7 +112,7 @@ function App() {
       <>
         <h2>blogs</h2>
 
-        <Notification notification={notification} />
+        <NotificationContainer />
 
         <div style={{ marginBottom: '2rem' }} data-test="logout">
           Logged in as <b>{user.name}</b>.{' '}
@@ -150,7 +150,7 @@ function App() {
   return (
     <>
       <h2>Log in</h2>
-      <Notification notification={notification} />
+      <NotificationContainer />
       <LoginForm login={onLogin} />
     </>
   );

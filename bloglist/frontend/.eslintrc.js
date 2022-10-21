@@ -36,4 +36,7 @@ module.exports = {
     jest: true,
     'cypress/globals': true,
   },
+  parserOptions: {
+    ecmaVersion: 2020,
+  },
 };
