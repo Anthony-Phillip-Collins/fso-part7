@@ -1,18 +1,33 @@
-import { useState, useEffect, useRef } from 'react';
-import { useDispatch } from 'react-redux';
+import { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  createBlog,
+  deleteBlog,
+  getAllBlogs,
+  likeBlog,
+} from './app/reducers/blogSlice';
+import { BlogSortTypes, sortBlogs } from './app/reducers/blogSortSlice';
 import { setNotification } from './app/reducers/notificationSlice';
-import Blog from './components/Blog';
+import { login, logout } from './app/reducers/userSlice';
+import Blog from './components/Blog/Blog';
 import BlogForm from './components/BlogForm';
 import LoginForm from './components/LoginForm';
 import NotificationContainer from './components/Notification/NotificationContainer';
 import Toggleable from './components/Toggleable';
-import blogService from './services/blogs';
-import loginService from './services/login';
 
 function App() {
+  const blogs = useSelector((state) => {
+    switch (state.blogSortType) {
+      case BlogSortTypes.LIKES_DESCENDING:
+        return [...state.blogs].sort((a, b) => b.likes - a.likes);
+      default:
+        return state.blogs;
+    }
+  });
+
+  const user = useSelector((state) => state.user);
+
   const dispatch = useDispatch();
-  const [blogs, setBlogs] = useState([]);
-  const [user, setUser] = useState();
   const toggleRef = useRef();
   const blogFormRef = useRef();
 
@@ -20,9 +35,10 @@ function App() {
 
   const onLogin = async ({ username, password }) => {
     try {
-      const data = await loginService.login({ username, password });
-      loginService.setUser(data);
-      setUser(loginService.getUser());
+      const { error } = await dispatch(login({ username, password }));
+      if (error) {
+        notify({ error });
+      }
     } catch (error) {
       notify({ error });
     }
@@ -30,81 +46,59 @@ function App() {
 
   const onLogout = (e) => {
     e.preventDefault();
-    loginService.logout();
-    setUser(null);
+    dispatch(logout());
   };
 
   const onBlogCreate = async ({ title, author, url }) => {
     const blog = { title, author, url };
     try {
-      const data = await blogService.create(blog);
+      const data = dispatch(createBlog(blog)).unwrap();
       notify({
         text: `The blog named '${data.title}' has been added.`,
       });
 
-      setBlogs(blogs.concat(data));
-
       blogFormRef.current.clearFields();
       toggleRef.current.toggle();
     } catch (error) {
-      // setNotification({ error });
+      notify({ error });
     }
   };
 
-  const onBlogUpdate = async ({ author, title, url, likes, id }) => {
+  const onBlogLike = async (id) => {
     try {
-      const update = await blogService.update({
-        author,
-        title,
-        url,
-        likes,
-        id,
-      });
-
+      const blog = await dispatch(likeBlog(id)).unwrap();
       notify({
-        text: `The blog named '${update.title}' has been updated.`,
+        text: `The blog named '${blog.title}' has been updated.`,
       });
-
-      const updatedBlogs = blogs.map((old) =>
-        old.id !== update.id ? old : { ...old, ...update }
-      );
-
-      setBlogs(updatedBlogs);
     } catch (error) {
       notify({ error });
     }
   };
 
-  const onBlogDelete = async (id) => {
-    try {
-      await blogService.remove({ id });
-      const deleted = blogs.find((blog) => blog.id === id);
-
-      notify({
-        text: `Blog "${deleted.title}" successfully deleted.`,
-      });
-
-      const updatedBlogs = blogs.filter((blog) => blog.id !== id);
-      setBlogs(updatedBlogs);
-    } catch (error) {
-      notify({ error });
+  const onBlogDelete = async ({ id, title, author }) => {
+    // eslint-disable-next-line no-alert
+    if (window.confirm(`Remove blog "${title}" by ${author}?`)) {
+      try {
+        await dispatch(deleteBlog(id));
+        notify({
+          text: `Blog deleted.`,
+        });
+      } catch (error) {
+        notify({ error });
+      }
     }
   };
 
   useEffect(() => {
     const init = async () => {
       try {
-        const allBlogs = await blogService.getAll();
-        setBlogs(allBlogs);
+        await dispatch(getAllBlogs());
+        dispatch(sortBlogs(BlogSortTypes.LIKES_DESCENDING));
       } catch (error) {
         console.error(error.message);
       }
     };
     init();
-  }, []);
-
-  useEffect(() => {
-    setUser(loginService.getUser());
   }, []);
 
   if (user) {
@@ -132,17 +126,15 @@ function App() {
           </Toggleable>
         </div>
 
-        {blogs
-          .sort((a, b) => b.likes - a.likes)
-          .map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              loggedInUser={user}
-              onUpdate={onBlogUpdate}
-              onDelete={onBlogDelete}
-            />
-          ))}
+        {blogs.map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            userIsOwner={blog.user.username === (user || {}).username}
+            onLike={onBlogLike}
+            onDelete={onBlogDelete}
+          />
+        ))}
       </>
     );
   }

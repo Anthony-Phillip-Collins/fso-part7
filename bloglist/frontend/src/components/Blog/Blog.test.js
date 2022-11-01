@@ -3,7 +3,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { fireEvent, render, screen } from '@testing-library/react';
 // import { prettyDOM } from '@testing-library/dom';
 import Blog from './Blog';
-import BlogForm from './BlogForm';
+import BlogForm from '../BlogForm';
 
 let blog;
 
@@ -55,9 +55,9 @@ describe('<Blog />', () => {
   });
 
   test('like button is clicked twice and event handler is called twice', () => {
-    const onUpdate = jest.fn();
+    const onLike = jest.fn();
 
-    render(<Blog blog={blog} onDelete={() => {}} onUpdate={onUpdate} />);
+    render(<Blog blog={blog} onDelete={() => {}} onLike={onLike} />);
 
     const toggleButton = screen.getByRole('button', { name: 'view' });
     fireEvent.click(toggleButton);
@@ -66,7 +66,7 @@ describe('<Blog />', () => {
     fireEvent.click(likeButton);
     fireEvent.click(likeButton);
 
-    expect(onUpdate).toBeCalledTimes(2);
+    expect(onLike).toBeCalledTimes(2);
   });
 });
 

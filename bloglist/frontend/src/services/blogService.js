@@ -1,5 +1,5 @@
 import axios from 'axios';
-import loginService from './login';
+import loginService from './loginService';
 
 const baseUrl = '/api/blogs';
 
@@ -14,8 +14,20 @@ const getAll = async () => {
   return data;
 };
 
+const getOne = async (id) => {
+  const { data } = await axios.get(`${baseUrl}/${id}`);
+  return data;
+};
+
 const create = async (blog) => {
   const { data } = await axios.post(baseUrl, blog, authConfig());
+  return data;
+};
+
+const like = async (id) => {
+  const blog = await getOne(id);
+  blog.likes += 1;
+  const { data } = await axios.put(`${baseUrl}/${blog.id}`, blog, authConfig());
   return data;
 };
 
@@ -24,11 +36,11 @@ const update = async (blog) => {
   return data;
 };
 
-const remove = async (blog) => {
-  const { data } = await axios.delete(`${baseUrl}/${blog.id}`, authConfig());
+const remove = async (id) => {
+  const { data } = await axios.delete(`${baseUrl}/${id}`, authConfig());
   return data;
 };
 
-const blogService = { getAll, create, update, remove };
+const blogService = { getAll, getOne, create, like, update, remove };
 
 export default blogService;

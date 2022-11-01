@@ -1,45 +1,21 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import styles from './Blog.module.css';
 
 function Blog(props) {
   const [expand, setExpand] = useState(false);
-  const { blog, loggedInUser, onUpdate, onDelete } = props;
+  const { blog, userIsOwner, onLike, onDelete } = props;
   const { title, author, url, likes, id, user } = blog;
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: 'solid',
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
-  const toggle = () => setExpand(!expand);
-
-  const onLikeClick = async () => {
-    onUpdate({
-      author,
-      title,
-      url,
-      likes: likes + 1,
-      id,
-    });
-  };
-
-  const remove = async () => {
-    // eslint-disable-next-line no-alert
-    if (window.confirm(`Remove blog "${title}" by ${author}?`)) {
-      onDelete(id);
-    }
-  };
-
-  const ownedByUser = user.username === (loggedInUser || {}).username;
-
   return (
-    <div style={blogStyle} data-test="blog">
+    <div className={styles.blog} data-test="blog">
       <div id="test">
         {title} <b>{author}</b>{' '}
-        <button type="button" onClick={toggle} data-test="expand">
+        <button
+          type="button"
+          onClick={() => setExpand(!expand)}
+          data-test="expand"
+        >
           {expand ? 'hide' : 'view'}
         </button>
       </div>
@@ -47,12 +23,16 @@ function Blog(props) {
         <>
           <div>{url}</div>
           <div data-test="likes">likes {likes}</div>
-          <button type="button" onClick={onLikeClick} data-test="like">
+          <button type="button" onClick={() => onLike(id)} data-test="like">
             like
           </button>
           <div>{user.name}</div>
-          {ownedByUser && (
-            <button type="button" onClick={remove} data-test="delete">
+          {userIsOwner && (
+            <button
+              type="button"
+              onClick={() => onDelete(blog)}
+              data-test="delete"
+            >
               remove
             </button>
           )}
@@ -94,7 +74,8 @@ Blog.defaultProps = {
 Blog.propTypes = {
   blog: BlogSchema.isRequired,
   loggedInUser: LoggedInUserSchema,
-  onUpdate: PropTypes.func.isRequired,
+  userIsOwner: PropTypes.bool.isRequired,
+  onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
 
