@@ -22,6 +22,7 @@ describe('Blog app', function () {
   });
 
   it('Login form is shown', function () {
+    cy.visit('http://localhost:3000/login');
     cy.contains('Log in');
     cy.get('[data-test=login-form]').as('loginForm');
     cy.get('@loginForm').get('[data-test=username]');
@@ -31,12 +32,14 @@ describe('Blog app', function () {
 
   describe('Login', function () {
     it('succeeds with correct credentials', function () {
+      cy.visit('http://localhost:3000/login');
       cy.login(user1);
       cy.contains('blogs');
       cy.get('[data-test=login-form]').should('not.exist');
     });
 
     it('fails with wrong credentials', function () {
+      cy.visit('http://localhost:3000/login');
       cy.login({ ...user1, password: 'wrong' });
       cy.contains('blogs').should('not.exist');
       cy.contains('invalid username or password').should(

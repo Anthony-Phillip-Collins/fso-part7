@@ -3,25 +3,53 @@ import blogService from '../../services/blogService';
 
 const initialState = [];
 
-export const getAllBlogs = createAsyncThunk('blog/getAllBlogs', async () => {
-  const data = await blogService.getAll();
-  return data;
-});
+export const getAllBlogs = createAsyncThunk(
+  'blog/getAllBlogs',
+  async (args, { rejectWithValue }) => {
+    try {
+      const data = await blogService.getAll();
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
-export const likeBlog = createAsyncThunk('blog/likeBlog', async (id) => {
-  const data = await blogService.like(id);
-  return data;
-});
+export const likeBlog = createAsyncThunk(
+  'blog/likeBlog',
+  async (id, { rejectWithValue }) => {
+    try {
+      const data = await blogService.like(id);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
-export const deleteBlog = createAsyncThunk('blog/deleteBlog', async (id) => {
-  await blogService.remove(id);
-  return id;
-});
+export const deleteBlog = createAsyncThunk(
+  'blog/deleteBlog',
+  async (id, { rejectWithValue }) => {
+    try {
+      await blogService.remove(id);
+      return id;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
-export const createBlog = createAsyncThunk('blog/createBlog', async (blog) => {
-  const data = await blogService.create(blog);
-  return data;
-});
+export const createBlog = createAsyncThunk(
+  'blog/createBlog',
+  async (blog, { rejectWithValue }) => {
+    try {
+      const data = await blogService.create(blog);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const blogSlice = createSlice({
   name: 'blog',
@@ -59,8 +87,8 @@ export const blogSlice = createSlice({
       console.log('deleteBlog.fulfilled', action.payload);
       return state.filter(({ id }) => id !== action.payload);
     });
-    builder.addCase(deleteBlog.rejected, () => {
-      console.log('deleteBlog.rejected');
+    builder.addCase(deleteBlog.rejected, (state, action) => {
+      console.log('deleteBlog.rejected', action.payload);
     });
 
     builder.addCase(createBlog.pending, () => {

@@ -5,9 +5,13 @@ const initialState = loginService.getUser();
 
 export const login = createAsyncThunk(
   'user/login',
-  async ({ username, password }) => {
-    const data = await loginService.login({ username, password });
-    return data;
+  async ({ username, password }, { rejectWithValue }) => {
+    try {
+      const data = await loginService.login({ username, password });
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
 );
 
@@ -30,7 +34,7 @@ export const userSlice = createSlice({
       return loginService.getUser();
     });
     builder.addCase(login.rejected, (state, action) => {
-      console.log('user/login.rejected', console.log(action));
+      console.log('user/login.rejected', state, action.payload);
     });
   },
 });

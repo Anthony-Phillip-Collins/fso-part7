@@ -4,7 +4,7 @@ import styles from './Blog.module.css';
 
 function Blog(props) {
   const [expand, setExpand] = useState(false);
-  const { blog, userIsOwner, onLike, onDelete } = props;
+  const { blog, userIsOwner, userIsLoggedIn, onLike, onDelete } = props;
   const { title, author, url, likes, id, user } = blog;
 
   return (
@@ -23,9 +23,11 @@ function Blog(props) {
         <>
           <div>{url}</div>
           <div data-test="likes">likes {likes}</div>
-          <button type="button" onClick={() => onLike(id)} data-test="like">
-            like
-          </button>
+          {userIsLoggedIn && (
+            <button type="button" onClick={() => onLike(id)} data-test="like">
+              like
+            </button>
+          )}
           <div>{user.name}</div>
           {userIsOwner && (
             <button
@@ -42,19 +44,13 @@ function Blog(props) {
   );
 }
 
-const LoggedInUserSchema = PropTypes.shape({
-  name: PropTypes.string,
-  username: PropTypes.string,
-  id: PropTypes.string,
-});
-
-const BlogUserSchema = PropTypes.shape({
+export const BlogUserSchema = PropTypes.shape({
   name: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
   id: PropTypes.string.isRequired,
 });
 
-const BlogSchema = PropTypes.shape({
+export const BlogSchema = PropTypes.shape({
   title: PropTypes.string.isRequired,
   author: PropTypes.string.isRequired,
   url: PropTypes.string.isRequired,
@@ -63,18 +59,10 @@ const BlogSchema = PropTypes.shape({
   user: BlogUserSchema.isRequired,
 });
 
-Blog.defaultProps = {
-  loggedInUser: {
-    name: null,
-    username: null,
-    id: null,
-  },
-};
-
 Blog.propTypes = {
   blog: BlogSchema.isRequired,
-  loggedInUser: LoggedInUserSchema,
   userIsOwner: PropTypes.bool.isRequired,
+  userIsLoggedIn: PropTypes.bool.isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };
