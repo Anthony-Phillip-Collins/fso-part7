@@ -4,6 +4,7 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import { getAllBlogs } from './app/reducers/blogSlice';
 import { BlogSortTypes, sortBlogs } from './app/reducers/blogSortSlice';
 import Header from './components/Header/Header';
+import User from './pages/User';
 import useNotification from './hooks/useNotification';
 import Blogs from './pages/Blogs';
 import Login from './pages/Login';
@@ -32,6 +33,7 @@ export default function App() {
         <Route index element={<Blogs />} />
         <Route path="login" element={<Login />} />
         <Route path="users" element={<Users />} />
+        <Route path="users/:id" element={<User />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

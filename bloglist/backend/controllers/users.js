@@ -44,4 +44,20 @@ usersRouter.post('/', async (request, response) => {
   return response.status(201).json(saved);
 });
 
+usersRouter.get('/:id', async (request, response, next) => {
+  const { id } = request.params;
+
+  const user = await User.findById(id).populate('blogs', {
+    url: 1,
+    author: 1,
+    title: 1,
+  });
+
+  if (user) {
+    return response.status(200).json(user);
+  }
+
+  return next();
+});
+
 module.exports = usersRouter;

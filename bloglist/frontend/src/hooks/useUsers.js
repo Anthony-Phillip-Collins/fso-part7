@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
 export default function useUsers() {
@@ -18,11 +17,6 @@ export default function useUsers() {
 
     return state.blogs.reduce(reducer, []);
   });
-
-  const st = useSelector((state) => state);
-  useEffect(() => {
-    console.log(st);
-  }, [users]);
 
   return users;
 }
