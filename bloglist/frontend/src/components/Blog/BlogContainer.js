@@ -32,7 +32,7 @@ export default function BlogContainer({ blog }) {
       userIsLoggedIn={!!user}
       onLike={likeBlog}
       onDelete={onBlogDelete}
-      expandable={false}
+      expandable
     />
   );
 }

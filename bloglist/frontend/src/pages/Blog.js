@@ -22,7 +22,7 @@ export default function Blog() {
         <a href={blog.url}>{blog.url}</a>
       </p>
       <p>
-        {blog.likes} likes{' '}
+        <span data-test="likes">{blog.likes} likes</span>{' '}
         {user && (
           <button
             type="button"

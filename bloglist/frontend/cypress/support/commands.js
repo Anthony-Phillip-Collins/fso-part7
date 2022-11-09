@@ -5,6 +5,7 @@ Cypress.Commands.add('createUser', ({ username, password }) => {
 });
 
 Cypress.Commands.add('login', ({ username, password }) => {
+  cy.visit('http://localhost:3000/login');
   cy.get('[data-test=login-form]').as('loginForm');
   cy.get('@loginForm').find('[data-test=username]').type(username);
   cy.get('@loginForm').find('[data-test=password]').type(password);

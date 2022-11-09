@@ -25,9 +25,19 @@ beforeAll(() => {
 
 describe('<Blog />', () => {
   test('initially renders title and author, but not the url or likes', () => {
-    render(<Blog blog={blog} onDelete={() => {}} onUpdate={() => {}} />, {
-      wrapper: BrowserRouter,
-    });
+    render(
+      <Blog
+        blog={blog}
+        userIsOwner
+        userIsLoggedIn
+        onDelete={() => {}}
+        onLike={() => {}}
+        expandable
+      />,
+      {
+        wrapper: BrowserRouter,
+      }
+    );
 
     const title = screen.getByText('Springfield News');
     expect(title).toBeDefined();
@@ -43,9 +53,19 @@ describe('<Blog />', () => {
   });
 
   test('shows url and likes when toggle button is clicked', () => {
-    render(<Blog blog={blog} onDelete={() => {}} onUpdate={() => {}} />, {
-      wrapper: BrowserRouter,
-    });
+    render(
+      <Blog
+        blog={blog}
+        userIsOwner
+        userIsLoggedIn
+        onDelete={() => {}}
+        onLike={() => {}}
+        expandable
+      />,
+      {
+        wrapper: BrowserRouter,
+      }
+    );
 
     const toggleButton = screen.getByRole('button', { name: 'view' });
     fireEvent.click(toggleButton);
@@ -62,9 +82,19 @@ describe('<Blog />', () => {
   test('like button is clicked twice and event handler is called twice', () => {
     const onLike = jest.fn();
 
-    render(<Blog blog={blog} onDelete={() => {}} onLike={onLike} />, {
-      wrapper: BrowserRouter,
-    });
+    render(
+      <Blog
+        blog={blog}
+        userIsOwner
+        userIsLoggedIn
+        onDelete={() => {}}
+        onLike={onLike}
+        expandable
+      />,
+      {
+        wrapper: BrowserRouter,
+      }
+    );
 
     const toggleButton = screen.getByRole('button', { name: 'view' });
     fireEvent.click(toggleButton);
