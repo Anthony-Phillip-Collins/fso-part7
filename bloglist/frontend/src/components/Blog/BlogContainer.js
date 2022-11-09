@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteBlog, likeBlog } from '../../app/reducers/blogSlice';
+import { deleteBlog } from '../../app/reducers/blogSlice';
+import useLikeBlog from '../../hooks/useBlogLike';
 import useNotification from '../../hooks/useNotification';
 import Blog, { BlogSchema } from './Blog';
 
@@ -7,17 +8,7 @@ export default function BlogContainer({ blog }) {
   const user = useSelector((state) => state.user);
   const notify = useNotification();
   const dispatch = useDispatch();
-
-  const onBlogLike = async (id) => {
-    try {
-      const data = await dispatch(likeBlog(id)).unwrap();
-      notify({
-        text: `The blog named '${data.title}' has been liked.`,
-      });
-    } catch (error) {
-      notify(error);
-    }
-  };
+  const likeBlog = useLikeBlog();
 
   const onBlogDelete = async ({ id, title, author }) => {
     // eslint-disable-next-line no-alert
@@ -39,8 +30,9 @@ export default function BlogContainer({ blog }) {
       blog={blog}
       userIsOwner={blog.user.username === (user || {}).username}
       userIsLoggedIn={!!user}
-      onLike={onBlogLike}
+      onLike={likeBlog}
       onDelete={onBlogDelete}
+      expandable={false}
     />
   );
 }

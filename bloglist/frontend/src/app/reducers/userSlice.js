@@ -26,15 +26,15 @@ export const userSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(login.pending, () => {
-      console.log('user/login.pending');
+      // console.log('user/login.pending');
     });
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log('user/login.fulfilled', action.payload);
+      // console.log('user/login.fulfilled', action.payload);
       loginService.setUser(action.payload);
       return loginService.getUser();
     });
-    builder.addCase(login.rejected, (state, action) => {
-      console.log('user/login.rejected', state, action.payload);
+    builder.addCase(login.rejected, () => {
+      // console.log('user/login.rejected', state, action.payload);
     });
   },
 });

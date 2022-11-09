@@ -7,6 +7,7 @@ import Header from './components/Header/Header';
 import User from './pages/User';
 import useNotification from './hooks/useNotification';
 import Blogs from './pages/Blogs';
+import Blog from './pages/Blog';
 import Login from './pages/Login';
 import NotFound from './pages/NotFound';
 import Users from './pages/Users';
@@ -31,6 +32,7 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Layout />}>
         <Route index element={<Blogs />} />
+        <Route path="blogs/:id" element={<Blog />} />
         <Route path="login" element={<Login />} />
         <Route path="users" element={<Users />} />
         <Route path="users/:id" element={<User />} />

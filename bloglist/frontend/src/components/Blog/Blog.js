@@ -1,23 +1,25 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import styles from './Blog.module.css';
 
 function Blog(props) {
   const [expand, setExpand] = useState(false);
-  const { blog, userIsOwner, userIsLoggedIn, onLike, onDelete } = props;
+  const { blog, userIsOwner, userIsLoggedIn, onLike, onDelete, expandable } =
+    props;
   const { title, author, url, likes, id, user } = blog;
+
+  const toggle = () => {
+    setExpand(!expand);
+  };
 
   return (
     <div className={styles.blog} data-test="blog">
       <div id="test">
-        {title} <b>{author}</b>{' '}
-        <button
-          type="button"
-          onClick={() => setExpand(!expand)}
-          data-test="expand"
-        >
-          {expand ? 'hide' : 'view'}
-        </button>
+        <Link to={`/blogs/${id}`}>
+          {title} <b>{author}</b>{' '}
+        </Link>
+        {expandable && <ExpandButton expand={expand} toggle={toggle} />}
       </div>
       {expand && (
         <>
@@ -44,6 +46,19 @@ function Blog(props) {
   );
 }
 
+function ExpandButton({ expand, toggle }) {
+  return (
+    <button type="button" onClick={() => toggle()} data-test="expand">
+      {expand ? 'hide' : 'view'}
+    </button>
+  );
+}
+
+ExpandButton.propTypes = {
+  expand: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
+};
+
 export const BlogUserSchema = PropTypes.shape({
   name: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
@@ -59,12 +74,17 @@ export const BlogSchema = PropTypes.shape({
   user: BlogUserSchema.isRequired,
 });
 
+Blog.defaultProps = {
+  expandable: true,
+};
+
 Blog.propTypes = {
   blog: BlogSchema.isRequired,
   userIsOwner: PropTypes.bool.isRequired,
   userIsLoggedIn: PropTypes.bool.isRequired,
   onLike: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  expandable: PropTypes.bool,
 };
 
 export default Blog;

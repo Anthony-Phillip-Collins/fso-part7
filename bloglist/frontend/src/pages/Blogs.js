@@ -1,20 +1,14 @@
 import { useSelector } from 'react-redux';
-import { BlogSortTypes } from '../app/reducers/blogSortSlice';
 import NotificationContainer from '../components/Notification/NotificationContainer';
 import BlogFormContainer from '../components/BlogForm/BlogFormContainer';
 import BlogContainer from '../components/Blog/BlogContainer';
+import useBlogs from '../hooks/useBlogs';
 
 export default function Blogs() {
-  const blogs = useSelector((state) => {
-    switch (state.blogSortType) {
-      case BlogSortTypes.LIKES_DESCENDING:
-        return [...state.blogs].sort((a, b) => b.likes - a.likes);
-      default:
-        return state.blogs;
-    }
-  });
-
+  const blogs = useBlogs();
   const user = useSelector((state) => state.user);
+
+  if (!blogs) return null;
 
   return (
     <>

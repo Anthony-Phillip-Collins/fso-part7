@@ -57,49 +57,51 @@ export const blogSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getAllBlogs.pending, () => {
-      console.log('getAllBlogs.pending');
+      // console.log('getAllBlogs.pending');
     });
-    builder.addCase(getAllBlogs.fulfilled, (state, action) => {
-      console.log('getAllBlogs.fulfilled', action.payload);
-      return action.payload;
-    });
+    builder.addCase(
+      getAllBlogs.fulfilled,
+      (state, action) =>
+        // console.log('getAllBlogs.fulfilled', action.payload);
+        action.payload
+    );
     builder.addCase(getAllBlogs.rejected, () => {
-      console.log('getAllBlogs.rejected');
+      // console.log('getAllBlogs.rejected');
     });
 
     builder.addCase(likeBlog.pending, () => {
-      console.log('likeBlog.pending');
+      // console.log('likeBlog.pending');
     });
-    builder.addCase(likeBlog.fulfilled, (state, action) => {
-      console.log('likeBlog.fulfilled', action.payload);
-      return state.map((blog) =>
+    builder.addCase(likeBlog.fulfilled, (state, action) =>
+      // console.log('likeBlog.fulfilled', action.payload);
+      state.map((blog) =>
         blog.id === action.payload.id ? action.payload : blog
-      );
-    });
+      )
+    );
     builder.addCase(likeBlog.rejected, () => {
-      console.log('likeBlog.rejected');
+      // console.log('likeBlog.rejected');
     });
 
     builder.addCase(deleteBlog.pending, () => {
-      console.log('deleteBlog.pending');
+      // console.log('deleteBlog.pending');
     });
-    builder.addCase(deleteBlog.fulfilled, (state, action) => {
-      console.log('deleteBlog.fulfilled', action.payload);
-      return state.filter(({ id }) => id !== action.payload);
-    });
-    builder.addCase(deleteBlog.rejected, (state, action) => {
-      console.log('deleteBlog.rejected', action.payload);
+    builder.addCase(deleteBlog.fulfilled, (state, action) =>
+      // console.log('deleteBlog.fulfilled', action.payload);
+      state.filter(({ id }) => id !== action.payload)
+    );
+    builder.addCase(deleteBlog.rejected, () => {
+      // console.log('deleteBlog.rejected', action.payload);
     });
 
     builder.addCase(createBlog.pending, () => {
-      console.log('createBlog.pending');
+      // console.log('createBlog.pending');
     });
     builder.addCase(createBlog.fulfilled, (state, action) => {
-      console.log('createBlog.fulfilled', action.payload);
+      // console.log('createBlog.fulfilled', action.payload);
       state.push(action.payload);
     });
     builder.addCase(createBlog.rejected, () => {
-      console.log('createBlog.rejected');
+      // console.log('createBlog.rejected');
     });
   },
 });

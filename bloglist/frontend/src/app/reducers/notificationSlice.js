@@ -36,16 +36,18 @@ export const notificationSlice = createSlice({
   extraReducers: (builder) => {
     // eslint-disable-next-line no-unused-vars
     builder.addCase(setNotification.pending, (state, action) => {
-      console.log('setNotification.pending');
+      // console.log('setNotification.pending');
     });
     // eslint-disable-next-line no-unused-vars
-    builder.addCase(setNotification.fulfilled, (state, action) => {
-      console.log('setNotification.fulfilled');
-      return action.payload;
-    });
+    builder.addCase(
+      setNotification.fulfilled,
+      (state, action) =>
+        // console.log('setNotification.fulfilled');
+        action.payload
+    );
     // eslint-disable-next-line no-unused-vars
     builder.addCase(setNotification.rejected, (state, action) => {
-      console.log('setNotification.rejected');
+      // console.log('setNotification.rejected');
     });
   },
 });
