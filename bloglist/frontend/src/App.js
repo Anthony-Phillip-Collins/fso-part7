@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { Outlet, Route, Routes } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 import { getAllBlogs } from './app/reducers/blogSlice';
 import { BlogSortTypes, sortBlogs } from './app/reducers/blogSortSlice';
-import Header from './components/Header/Header';
 import User from './pages/User';
 import useNotification from './hooks/useNotification';
+import Layout from './components/Layout';
 import Blogs from './pages/Blogs';
 import Blog from './pages/Blog';
 import Login from './pages/Login';
@@ -39,14 +39,5 @@ export default function App() {
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
-  );
-}
-
-function Layout() {
-  return (
-    <>
-      <Header />
-      <Outlet />
-    </>
   );
 }

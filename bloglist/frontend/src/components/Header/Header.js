@@ -1,13 +1,5 @@
-import { Link } from 'react-router-dom';
-import LoginStatusContainer from '../LoginStatus/LoginStatusContainer';
+import Navigation from '../Navigation/Navigation';
 
 export default function Header() {
-  return (
-    <>
-      <Link to="/">blogs</Link>
-      <Link to="/users">users</Link>
-      <LoginStatusContainer />
-      <div />
-    </>
-  );
+  return <Navigation />;
 }
