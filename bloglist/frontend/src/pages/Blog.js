@@ -1,6 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import { useState } from 'react';
+import { Button, Form, ListGroup } from 'react-bootstrap';
 import useBlogs from '../hooks/useBlogs';
 import useLikeBlog from '../hooks/useBlogLike';
 import NotificationContainer from '../components/Notification/NotificationContainer';
@@ -21,14 +22,15 @@ export default function Blog() {
     <>
       <NotificationContainer />
 
-      <h2>{blog.title}</h2>
+      <h1 className="pt-4 pb-4">{blog.title}</h1>
+
       <p>
         <a href={blog.url}>{blog.url}</a>
       </p>
       <p>
         <span data-test="likes">{blog.likes} likes</span>{' '}
         {user && (
-          <button
+          <Button
             type="button"
             onClick={() => {
               likeBlog(id);
@@ -36,7 +38,7 @@ export default function Blog() {
             data-test="like"
           >
             like
-          </button>
+          </Button>
         )}
       </p>
 
@@ -50,13 +52,16 @@ export default function Blog() {
         <p>Please log in to leave a comment.</p>
       )}
 
-      <ul>
+      <ListGroup className="mt-4">
         {blog?.comments.map(
           (comment, key) =>
-            // eslint-disable-next-line react/no-array-index-key
-            comment && comment.text && <li key={key}>{comment.text}</li>
+            comment &&
+            comment.text && (
+              // eslint-disable-next-line react/no-array-index-key
+              <ListGroup.Item key={key}>{comment.text}</ListGroup.Item>
+            )
         )}
-      </ul>
+      </ListGroup>
     </>
   );
 }
@@ -79,15 +84,18 @@ function CommentsForm({ blog }) {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <input
+    <Form onSubmit={onSubmit} className="d-inline-flex align-items-start">
+      <Form.Control
         type="text"
         id="comment"
         value={comment}
         onChange={(e) => setComment(e.target.value)}
+        className=""
       />
-      <button type="submit">add comment</button>
-    </form>
+      <Button type="submit" className="text-nowrap ms-2">
+        add comment
+      </Button>
+    </Form>
   );
 }
 

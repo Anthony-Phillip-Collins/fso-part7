@@ -1,5 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 
 const Toggleable = forwardRef(
   ({ children, buttonLabelShow, buttonLabelHide }, ref) => {
@@ -18,9 +19,14 @@ const Toggleable = forwardRef(
     return (
       <div data-test="toggleable">
         <div style={visibility}>{children}</div>
-        <button type="button" onClick={toggle} data-test="toggleable-button">
+        <Button
+          type="button"
+          onClick={toggle}
+          data-test="toggleable-button"
+          variant={expand ? 'secondary' : 'primary'}
+        >
           {expand ? buttonLabelHide : buttonLabelShow}
-        </button>
+        </Button>
       </div>
     );
   }

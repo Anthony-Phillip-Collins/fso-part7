@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
 import { logout } from '../../app/reducers/userSlice';
 import LoginStatus from './LoginStatus';
 
@@ -11,9 +10,8 @@ export default function LoginStatusContainer() {
     dispatch(logout());
   };
 
-  return user ? (
-    <LoginStatus onLogout={onLogout} userName={user.name} />
-  ) : (
-    <Link to="login">login</Link>
-  );
+  return <LoginStatus onLogout={onLogout} userName={user?.name} />;
+  // ) : (
+  //   <Link to="login">login</Link>
+  // );
 }

@@ -1,3 +1,4 @@
+import { Table } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import useUsers from '../hooks/useUsers';
 
@@ -5,16 +6,16 @@ export default function Users() {
   const users = useUsers();
   return (
     <>
-      <h1>Users</h1>
+      <h1 className="pt-4 pb-4">Users</h1>
 
-      <table>
-        <tbody>
+      <Table striped bordered hover>
+        <thead>
           <tr>
-            <td />
-            <td>
-              <b>blogs created</b>
-            </td>
+            <th>User Name</th>
+            <th>Blogs created</th>
           </tr>
+        </thead>
+        <tbody>
           {users.map((user) => (
             <tr key={user.id}>
               <td>
@@ -24,7 +25,7 @@ export default function Users() {
             </tr>
           ))}
         </tbody>
-      </table>
+      </Table>
     </>
   );
 }

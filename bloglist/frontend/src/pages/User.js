@@ -1,4 +1,6 @@
-import { useParams } from 'react-router-dom';
+import { ListGroup } from 'react-bootstrap';
+import { Link, useParams } from 'react-router-dom';
+import { FaChevronRight as Chevron } from 'react-icons/fa';
 import useUsers from '../hooks/useUsers';
 
 export default function User() {
@@ -12,13 +14,18 @@ export default function User() {
 
   return (
     <>
-      <h2>{user.name}</h2>
-      <h3>added blogs</h3>
-      <ul>
+      <h1 className="pt-4 pb-4">{user.name}</h1>
+      <h2 className="pt-4 pb-4">added blogs:</h2>
+      <ListGroup>
         {user.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
+          <ListGroup.Item key={blog.id}>
+            <Link to={`/blogs/${blog.id}`} className="text-decoration-none">
+              {blog.title} <b>{blog.author}</b>{' '}
+              <Chevron size={13} className="ms-1" />
+            </Link>
+          </ListGroup.Item>
         ))}
-      </ul>
+      </ListGroup>
     </>
   );
 }

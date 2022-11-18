@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import styles from './Blog.module.css';
+import { FaChevronRight as Chevron } from 'react-icons/fa';
 
 function Blog(props) {
   const [expand, setExpand] = useState(false);
@@ -14,10 +14,10 @@ function Blog(props) {
   };
 
   return (
-    <div className={styles.blog} data-test="blog">
-      <div id="test">
-        <Link to={`/blogs/${id}`}>
-          {title} <b>{author}</b>{' '}
+    <div data-test="blog">
+      <div id="test" className="d-flex">
+        <Link to={`/blogs/${id}`} className="text-decoration-none">
+          {title} <b>{author}</b> <Chevron size={13} className="ms-1" />
         </Link>
         {expandable && <ExpandButton expand={expand} toggle={toggle} />}
       </div>
@@ -48,7 +48,12 @@ function Blog(props) {
 
 function ExpandButton({ expand, toggle }) {
   return (
-    <button type="button" onClick={() => toggle()} data-test="expand">
+    <button
+      type="button"
+      onClick={() => toggle()}
+      data-test="expand"
+      style={{ opacity: '0' }}
+    >
       {expand ? 'hide' : 'view'}
     </button>
   );

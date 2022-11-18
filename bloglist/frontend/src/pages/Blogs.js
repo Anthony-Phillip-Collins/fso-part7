@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux';
+import { ListGroup } from 'react-bootstrap';
 import NotificationContainer from '../components/Notification/NotificationContainer';
 import BlogFormContainer from '../components/BlogForm/BlogFormContainer';
 import BlogContainer from '../components/Blog/BlogContainer';
@@ -12,15 +13,19 @@ export default function Blogs() {
 
   return (
     <>
-      <h1>Blogs</h1>
+      <h1 className="pt-4 pb-4">Blogs</h1>
 
       <NotificationContainer />
 
       {user && <BlogFormContainer />}
 
-      {blogs.map((blog) => (
-        <BlogContainer key={blog.id} blog={blog} />
-      ))}
+      <ListGroup>
+        {blogs.map((blog) => (
+          <ListGroup.Item>
+            <BlogContainer key={blog.id} blog={blog} />
+          </ListGroup.Item>
+        ))}
+      </ListGroup>
     </>
   );
 }

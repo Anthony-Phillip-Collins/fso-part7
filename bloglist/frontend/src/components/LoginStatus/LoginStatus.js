@@ -1,4 +1,6 @@
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 export default function LoginStatus({ userName, onLogout }) {
   const handleLogout = (e) => {
@@ -6,17 +8,29 @@ export default function LoginStatus({ userName, onLogout }) {
     onLogout();
   };
 
+  if (!userName) {
+    return (
+      <Button as={Link} to="login">
+        Log in
+      </Button>
+    );
+  }
+
   return (
-    <div style={{ marginBottom: '2rem' }} data-test="logout">
-      Logged in as <b>{userName}</b>.{' '}
-      <form onSubmit={handleLogout} style={{ display: 'inline' }}>
-        <button type="submit">Log out</button>
+    <div className="d-flex align-items-center" data-test="logout">
+      Logged in as <b className="ms-1">{userName}</b>.{' '}
+      <form onSubmit={handleLogout} className="ms-1">
+        <Button type="submit">Log out</Button>
       </form>
     </div>
   );
 }
 
+LoginStatus.defaultProps = {
+  userName: null,
+};
+
 LoginStatus.propTypes = {
-  userName: PropTypes.string.isRequired,
+  userName: PropTypes.string,
   onLogout: PropTypes.func.isRequired,
 };

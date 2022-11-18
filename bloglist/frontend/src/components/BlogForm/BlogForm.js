@@ -1,5 +1,6 @@
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button, Form } from 'react-bootstrap';
 
 const BlogForm = forwardRef(({ create }, ref) => {
   const [title, setTitle] = useState('');
@@ -22,7 +23,7 @@ const BlogForm = forwardRef(({ create }, ref) => {
   }));
 
   return (
-    <form
+    <Form
       onSubmit={handleSubmit}
       style={{
         display: 'inline-flex',
@@ -31,35 +32,37 @@ const BlogForm = forwardRef(({ create }, ref) => {
       }}
       data-test="blog-form"
     >
-      <label>
+      <Form.Label>
         Title
-        <input
+        <Form.Control
           type="text"
           name="title"
           value={title}
           onChange={({ target: { value } }) => setTitle(value)}
         />
-      </label>
-      <label>
+      </Form.Label>
+      <Form.Label>
         Author
-        <input
+        <Form.Control
           type="text"
           name="author"
           value={author}
           onChange={({ target: { value } }) => setAuthor(value)}
         />
-      </label>
-      <label>
+      </Form.Label>
+      <Form.Label>
         URL
-        <input
+        <Form.Control
           type="text"
           name="url"
           value={url}
           onChange={({ target: { value } }) => setUrl(value)}
         />
-      </label>
-      <button type="submit">create</button>
-    </form>
+      </Form.Label>
+      <Button type="submit" className="mb-2">
+        create
+      </Button>
+    </Form>
   );
 });
 
