@@ -92,4 +92,27 @@ blogsRouter.put('/:id', userExtractor, async (request, response, next) => {
   return next({ name: ErrorName.Unauthorized });
 });
 
+/* Comments */
+
+blogsRouter.post('/:id/comments', async (request, response, next) => {
+  const blog = await Blog.findById(request.params.id);
+  const comments = blog.comments || [];
+  const { comment } = request.body;
+
+  if (comment && comment.text) {
+    comments.push(comment);
+
+    const updated = await Blog.findByIdAndUpdate(
+      request.params.id,
+      { comments },
+      {
+        returnDocument: 'after',
+      }
+    );
+    return response.status(201).json(updated);
+  }
+
+  return next({ name: ErrorName.MalformedRequestObject });
+});
+
 module.exports = blogsRouter;

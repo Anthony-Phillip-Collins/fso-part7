@@ -5,6 +5,7 @@ const ErrorName = Object.freeze({
   JsonWebTokenError: 'JsonWebTokenError',
   Unauthorized: 'Unauthorized',
   NotInTestMode: 'NotInTestMode',
+  MalformedRequestObject: 'MalformedRequestObject',
 });
 
 module.exports = ErrorName;

@@ -273,10 +273,10 @@ const blogsTests = () => {
     test('succeeds with status code 201 if id is valid', async () => {
       const { id } = await Blog.findOne();
       const update = {
-        title: 'Springfield News',
-        author: 'Homer Simpson',
-        url: 'https://en.wikipedia.org/wiki/The_Simpsons',
-        likes: 99,
+        title: 'Gazorpazorp News',
+        author: 'Rick Sanchez',
+        url: 'https://en.wikipedia.org/wiki/Rick_and_Morty',
+        likes: 999,
       };
 
       await login();

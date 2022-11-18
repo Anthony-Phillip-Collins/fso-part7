@@ -7,7 +7,10 @@ export const setNotification = createAsyncThunk(
   'notification/setNotification',
   async (args, { dispatch }) => {
     const delay = args.delay || 5000;
-    const error = args?.error?.response?.data?.error || args?.error;
+    const error =
+      args?.response?.data?.error ||
+      args?.error?.response?.data?.error ||
+      args?.error;
     let isError = args.isError === true;
     let message = args.text;
 

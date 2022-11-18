@@ -24,7 +24,12 @@ const errorHandler = (error, request, response, next) => {
         .json({ error: { message: 'The requested resource doesn’t exists!' } });
       break;
     case ErrorName.CastError:
-      response.status(400).json({ error: { message: 'Malformatted id!' } });
+      response.status(400).json({ error: { message: 'Malformed id!' } });
+      break;
+    case ErrorName.MalformedRequestObject:
+      response
+        .status(400)
+        .json({ error: { message: 'Malformed request object!' } });
       break;
     case ErrorName.ValidationError:
       response

@@ -27,6 +27,18 @@ export const likeBlog = createAsyncThunk(
   }
 );
 
+export const addComment = createAsyncThunk(
+  'blog/addComment',
+  async ({ id, comment }, { rejectWithValue }) => {
+    try {
+      const data = await blogService.addComment(id, comment);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 export const deleteBlog = createAsyncThunk(
   'blog/deleteBlog',
   async (id, { rejectWithValue }) => {
@@ -102,6 +114,18 @@ export const blogSlice = createSlice({
     });
     builder.addCase(createBlog.rejected, () => {
       // console.log('createBlog.rejected');
+    });
+
+    builder.addCase(addComment.pending, () => {
+      // console.log('addComment.pending');
+    });
+    builder.addCase(addComment.fulfilled, (state, action) => {
+      const blog = state.find(({ id }) => id === action.payload.id);
+      blog.comments = action.payload.comments;
+      // console.log('addComment.fulfilled');
+    });
+    builder.addCase(addComment.rejected, () => {
+      // console.log('addComment.rejected');
     });
   },
 });

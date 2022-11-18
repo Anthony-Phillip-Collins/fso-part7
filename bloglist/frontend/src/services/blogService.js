@@ -31,6 +31,15 @@ const like = async (id) => {
   return data;
 };
 
+const addComment = async (id, comment) => {
+  const { data } = await axios.post(
+    `${baseUrl}/${id}/comments`,
+    { comment: { text: comment } },
+    authConfig()
+  );
+  return data;
+};
+
 const update = async (blog) => {
   const { data } = await axios.put(`${baseUrl}/${blog.id}`, blog, authConfig());
   return data;
@@ -41,6 +50,14 @@ const remove = async (id) => {
   return data;
 };
 
-const blogService = { getAll, getOne, create, like, update, remove };
+const blogService = {
+  getAll,
+  getOne,
+  create,
+  like,
+  addComment,
+  update,
+  remove,
+};
 
 export default blogService;
